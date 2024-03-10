@@ -54,7 +54,7 @@ function GoogleMapSection() {
         lng: source.lng,
       });
     }
-    if (source.length != [] && destination.length != []) {
+    if (source.length !== 0 && destination.length !== 0) {
       directionRoute();
     }
   }, [source]);
@@ -67,7 +67,7 @@ function GoogleMapSection() {
       });
     }
 
-    if (source.length != [] && destination.length != []) {
+    if (source.length !== 0 && destination.length !== 0) {
       directionRoute();
     }
   }, [destination]);
@@ -111,7 +111,7 @@ function GoogleMapSection() {
       center={center}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      options={{ mapId: "ef16554d13ba41a2"}}
+      options={{ mapId: "ef16554d13ba41a2" }}
     >
       {source.length !== 0 ? (
         <MarkerF
@@ -128,8 +128,8 @@ function GoogleMapSection() {
             position={{ lat: source.lat, lng: source.lng }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <div className="p-2 bg-white font-bold inline-block">
-              <p className="text-black text-[16px]">{source.label}</p>
+            <div className="p-2 bg-blue-500 text-white font-bold inline-block">
+              <p className="text-[16px]">{source.label}</p>
             </div>
           </OverlayViewF>
         </MarkerF>
@@ -150,8 +150,8 @@ function GoogleMapSection() {
             position={{ lat: destination.lat, lng: destination.lng }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <div className="p-2 bg-white font-bold inline-block">
-              <p className="text-black text-[16px]">{destination.label}</p>
+            <div className="p-2 bg-blue-500 text-white font-bold inline-block">
+              <p className="text-[16px]">{destination.label}</p>
             </div>
           </OverlayViewF>
         </MarkerF>
@@ -161,8 +161,10 @@ function GoogleMapSection() {
         directions={directionRoutePoints}
         options={{
           polylineOptions: {
-            strokeColor: "#000",
-            strokeWeight: 5,
+            strokeColor: "#4285f4",
+            strokeWeight: 8,
+            strokeOpacity: 0.8,
+            geodesic: true,
           },
           suppressMarkers: true,
         }}

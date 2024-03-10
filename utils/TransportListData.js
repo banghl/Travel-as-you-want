@@ -5,7 +5,9 @@ export const TransportListData = [
       seat: 1, 
       desc: 'Zippy and Convenient',
       amount: 0.8,
-      image: '/ScootGo.png'
+      image: '/ScootGo.png',
+      speed: 20
+      
    },
    {
       id: 2,
@@ -13,7 +15,8 @@ export const TransportListData = [
       seat: 2, 
       desc: 'Quick and Efficient',
       amount: 1.1,
-      image: '/MotoMax.png'
+      image: '/MotoMax.png',
+      speed: 90
    },
    {
       id: 3,
@@ -21,7 +24,8 @@ export const TransportListData = [
       seat: 4, 
       desc: 'Affordable, Everyday rides',
       amount: 1.4,
-      image: '/CityDrive.png'
+      image: '/CityDrive.png',
+      speed: 110
    },
    {
       id: 4,
@@ -29,6 +33,7 @@ export const TransportListData = [
       seat: 4, 
       desc: 'Green and Sustainable',
       amount: 1.6,
-      image: '/EcoCharge.png'
+      image: '/EcoCharge.png',
+      speed: 100
    }
 ];

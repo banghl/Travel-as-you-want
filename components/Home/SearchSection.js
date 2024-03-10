@@ -16,31 +16,28 @@ function SearchSection() {
       { lat: destination.lat, lng: destination.lng }
     );
 
-    setDistance(dist*0.00621374)
+    setDistance(dist * 0.00621374);
   };
 
   useEffect(() => {
-    if (source) {
-    }
-    if (destination) {
-    }
   }, [source, destination]);
 
   return (
     <div>
-    <div className="p-2 md:p-6 border-[2px] rounded-xl">
-      <p className="text-[20px] font-bold">Get a ride</p>
-      <InputItem type="source" />
-      <InputItem type="destination" />
+      <div className="p-6 border-2 rounded-xl bg-gray-100">
+        <p className="text-2xl font-bold text-indigo-700 mb-4">Get a Ride</p>
+        <InputItem type="source" />
+        <InputItem type="destination" />
 
-      <button
-        className="p-4 bg-black w-full mt-5 text-white rounded-lg"
-        onClick={() => calculateDistance()}
-      >
-        Search
-      </button>
-    </div>
-      {distance?<TransportListOptions distance = {distance}/>:null}
+        <button
+          className="p-4 bg-indigo-600 w-full mt-5 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"
+          onClick={() => calculateDistance()}
+        >
+          Search
+        </button>
+      </div>
+
+      {distance ? <TransportListOptions distance={distance} /> : null}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { HiUser } from "react-icons/hi2";
 
-function TransportListItem({ transport, distance }) {
+function TransportListItem({ transport, distance, estimatedTime }) {
   const calculatedAmount = distance ? (transport.amount * distance).toFixed(2) : 'N/A';
 
   return (
@@ -16,6 +16,7 @@ function TransportListItem({ transport, distance }) {
                <HiUser/>{transport.seat}
             </span>
             <p>{transport.desc}</p>
+            <p>Estimated Time: {estimatedTime}</p>
           </div>
           <h2 className='font-semibold text-[18px]'>
             ${calculatedAmount}
