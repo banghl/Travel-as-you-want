@@ -26,6 +26,7 @@ function GoogleMapSection() {
 
   const [map, setMap] = React.useState(null);
   const [directionRoutePoints, setDirectionRoutePoints] = useState([]);
+  const [trafficLayer, setTrafficLayer] = useState(null); 
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -42,6 +43,15 @@ function GoogleMapSection() {
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (map) {
+      // Add the traffic layer when the map is loaded
+      const trafficLayer = new window.google.maps.TrafficLayer();
+      trafficLayer.setMap(map);
+      setTrafficLayer(trafficLayer);
+    }
+  }, [map]);
 
   useEffect(() => {
     if (source?.length !== 0 && map) {
@@ -111,7 +121,7 @@ function GoogleMapSection() {
       center={center}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      options={{ mapId: "ef16554d13ba41a2" }}
+      options={{ mapId: "ef16554d13ba41a2"}}
     >
       {source.length !== 0 ? (
         <MarkerF
@@ -172,5 +182,26 @@ function GoogleMapSection() {
     </GoogleMap>
   );
 }
+
+const trafficLayerStyles = [
+  {
+    featureType: "all",
+    elementType: "all",
+    stylers: [
+      {
+        visibility: "simplified",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+];
 
 export default GoogleMapSection;
