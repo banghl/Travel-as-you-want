@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   DirectionsRenderer,
   GoogleMap,
+  Marker,
   MarkerF,
   OverlayView,
   OverlayViewF,
@@ -11,8 +12,8 @@ import { SourceContext } from "@/context/SourceContext";
 import { DestinationContext } from "@/context/DestinationContext";
 
 function GoogleMapSection() {
-  const { source, setSource } = useContext(SourceContext);
-  const { destination, setDestination } = useContext(DestinationContext);
+  const { source } = useContext(SourceContext);
+  const { destination } = useContext(DestinationContext);
 
   const containerStyle = {
     width: "100%",
@@ -24,9 +25,9 @@ function GoogleMapSection() {
     lng: -38.523,
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = useState(null);
   const [directionRoutePoints, setDirectionRoutePoints] = useState([]);
-  const [trafficLayer, setTrafficLayer] = useState(null); 
+  const [trafficLayer, setTrafficLayer] = useState(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -46,7 +47,6 @@ function GoogleMapSection() {
 
   useEffect(() => {
     if (map) {
-      // Add the traffic layer when the map is loaded
       const trafficLayer = new window.google.maps.TrafficLayer();
       trafficLayer.setMap(map);
       setTrafficLayer(trafficLayer);
@@ -67,7 +67,7 @@ function GoogleMapSection() {
     if (source.length !== 0 && destination.length !== 0) {
       directionRoute();
     }
-  }, [source]);
+  }, [source, destination, map]);
 
   useEffect(() => {
     if (destination?.length !== 0 && map) {
@@ -80,19 +80,19 @@ function GoogleMapSection() {
     if (source.length !== 0 && destination.length !== 0) {
       directionRoute();
     }
-  }, [destination]);
+  }, [destination, source, map]);
 
   const directionRoute = () => {
-    const DirectionsService = new google.maps.DirectionsService();
+    const DirectionsService = new window.google.maps.DirectionsService();
 
     DirectionsService.route(
       {
         origin: { lat: source.lat, lng: source.lng },
         destination: { lat: destination.lat, lng: destination.lng },
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: window.google.maps.TravelMode.DRIVING,
       },
       (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
+        if (status === window.google.maps.DirectionsStatus.OK) {
           setDirectionRoutePoints(result);
         } else {
           console.error("Error");
@@ -121,7 +121,7 @@ function GoogleMapSection() {
       center={center}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      options={{ mapId: "ef16554d13ba41a2"}}
+      options={{ mapId: "ef16554d13ba41a2" }}
     >
       {source.length !== 0 ? (
         <MarkerF
@@ -179,29 +179,60 @@ function GoogleMapSection() {
           suppressMarkers: true,
         }}
       />
+      <Legend />
     </GoogleMap>
   );
 }
 
-const trafficLayerStyles = [
-  {
-    featureType: "all",
-    elementType: "all",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-];
+const Legend = () => (
+  <div
+    style={{
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      backgroundColor: "white",
+      padding: "10px",
+      borderRadius: "5px",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    }}
+  >
+    <div>
+      <span
+        style={{
+          display: "inline-block",
+          width: "20px",
+          height: "20px",
+          backgroundColor: "#FF0000",
+          marginRight: "5px",
+        }}
+      ></span>
+      Heavy Traffic
+    </div>
+    <div>
+      <span
+        style={{
+          display: "inline-block",
+          width: "20px",
+          height: "20px",
+          backgroundColor: "#FFFF00",
+          marginRight: "5px",
+        }}
+      ></span>
+      Moderate Traffic
+    </div>
+    <div>
+      <span
+        style={{
+          display: "inline-block",
+          width: "20px",
+          height: "20px",
+          backgroundColor: "#00FF00",
+          marginRight: "5px",
+        }}
+      ></span>
+      Light Traffic
+    </div>
+  </div>
+);
 
 export default GoogleMapSection;

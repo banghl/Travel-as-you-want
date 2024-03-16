@@ -1,13 +1,13 @@
-"use client";
-import React, { useContext, useEffect, useState } from "react";
-import InputItem from "./InputItem";
-import { SourceContext } from "@/context/SourceContext";
-import { DestinationContext } from "@/context/DestinationContext";
-import TransportListOptions from "./TransportListOptions";
+import React, { useContext, useState } from 'react';
+import { SourceContext } from '@/context/SourceContext';
+import { DestinationContext } from '@/context/DestinationContext';
+import InputItem from './InputItem';
+import TransportListOptions from './TransportListOptions';
+import NearbyPlaceOptions from './NearbyPlaceOptions';
 
 function SearchSection() {
-  const { source, setSource } = useContext(SourceContext);
-  const { destination, setDestination } = useContext(DestinationContext);
+  const { source } = useContext(SourceContext);
+  const { destination } = useContext(DestinationContext);
   const [distance, setDistance] = useState();
 
   const calculateDistance = () => {
@@ -18,9 +18,6 @@ function SearchSection() {
 
     setDistance(dist * 0.00621374);
   };
-
-  useEffect(() => {
-  }, [source, destination]);
 
   return (
     <div>
@@ -37,7 +34,9 @@ function SearchSection() {
         </button>
       </div>
 
-      {distance ? <TransportListOptions distance={distance} /> : null}
+      <NearbyPlaceOptions source={source} />
+
+      {distance && <TransportListOptions distance={distance} />}
     </div>
   );
 }
