@@ -1,12 +1,11 @@
 "use client"
-import GoogleMapSection from "@/components/Home/GoogleMapSection";
-import SearchSection from "@/components/Home/SearchSection";
-import { DestinationContext } from "@/context/DestinationContext";
-import { SourceContext } from "@/context/SourceContext";
-import { UserButton } from "@clerk/nextjs";
+
 import { LoadScript } from "@react-google-maps/api";
-import Image from "next/image";
 import { useState } from "react";
+import GoogleMapSection from './../components/Home/GoogleMapSection';
+import SearchSection from './../components/Home/SearchSection';
+import { DestinationContext } from './../context/DestinationContext';
+import { SourceContext } from './../context/SourceContext';
 
 export default function Home() {
   const [source, setSource] = useState([]);
