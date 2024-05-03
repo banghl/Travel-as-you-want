@@ -8,8 +8,8 @@ import {
   OverlayViewF,
   useJsApiLoader,
 } from "@react-google-maps/api";
-import { SourceContext } from "@/context/SourceContext";
-import { DestinationContext } from "@/context/DestinationContext";
+import { SourceContext } from "../../context/SourceContext";
+import { DestinationContext } from "../../context/DestinationContext";
 
 function GoogleMapSection() {
   const { source } = useContext(SourceContext);
@@ -28,6 +28,7 @@ function GoogleMapSection() {
   const [map, setMap] = useState(null);
   const [directionRoutePoints, setDirectionRoutePoints] = useState([]);
   const [trafficLayer, setTrafficLayer] = useState(null);
+  const [distance, setDistance] = useState(null); // State to hold the distance
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -94,6 +95,10 @@ function GoogleMapSection() {
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
           setDirectionRoutePoints(result);
+
+          // Calculate distance
+          const distance = result.routes[0].legs[0].distance.text;
+          setDistance(distance);
         } else {
           console.error("Error");
         }
@@ -106,6 +111,19 @@ function GoogleMapSection() {
       const bounds = new window.google.maps.LatLngBounds(center);
       map.fitBounds(bounds);
 
+      // Set max and min zoom levels
+      const maxZoomService = new window.google.maps.MaxZoomService();
+      maxZoomService.getMaxZoomAtLatLng(map.getCenter(), (response) => {
+        if (response.status === window.google.maps.MaxZoomStatus.OK) {
+          // Calculate zoom level for 50km distance
+          const maxZoomFor50km = calculateMaxZoomForDistance(response.zoom, 50);
+          map.setOptions({
+            maxZoom: maxZoomFor50km, // Limit max zoom to zoom level for 50km distance
+            minZoom: 10, // Limit min zoom to 10
+          });
+        }
+      });
+
       setMap(map);
     },
     [center]
@@ -114,6 +132,22 @@ function GoogleMapSection() {
   const onUnmount = React.useCallback(function callback(map) {
     setMap(null);
   }, []);
+
+  // Function to calculate zoom level for a given distance
+  const calculateMaxZoomForDistance = (currentZoom, distance) => {
+    // Formula to calculate zoom level based on distance
+    // Adjust the formula as needed for your specific use case
+    const zoom = Math.floor(
+      currentZoom - Math.log2(distance / 156543.03392) + 8
+    );
+    return Math.max(0, Math.min(21, zoom));
+  };
+
+  function calculateMidpoint(source, destination) {
+    const lat = (source.lat + destination.lat) / 2;
+    const lng = (source.lng + destination.lng) / 2;
+    return { lat, lng };
+  }
 
   return (
     <GoogleMap
@@ -167,18 +201,43 @@ function GoogleMapSection() {
         </MarkerF>
       ) : null}
 
-      <DirectionsRenderer
-        directions={directionRoutePoints}
-        options={{
-          polylineOptions: {
-            strokeColor: "#4285f4",
-            strokeWeight: 8,
-            strokeOpacity: 0.8,
-            geodesic: true,
-          },
-          suppressMarkers: true,
-        }}
-      />
+      {directionRoutePoints.length !== 0 && (
+        <DirectionsRenderer
+          directions={directionRoutePoints}
+          options={{
+            polylineOptions: {
+              strokeColor: "#4285f4",
+              strokeWeight: 8,
+              strokeOpacity: 0.8,
+              geodesic: true,
+            },
+            suppressMarkers: true,
+          }}
+        />
+      )}
+
+      {distance && (
+        <OverlayView
+          position={calculateMidpoint(source, destination)}
+          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        >
+          <div
+            style={{
+              background: "#4169E1", 
+              padding: "10px",
+              borderRadius: "10px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              textAlign: "center",
+              minWidth: "150px",
+              color: "white",
+            }}
+          >
+            <p style={{ margin: 0 }}>Distance: {distance}</p>
+          </div>
+        </OverlayView>
+      )}
+
       <Legend />
     </GoogleMap>
   );
@@ -214,7 +273,7 @@ const Legend = () => (
           display: "inline-block",
           width: "20px",
           height: "20px",
-          backgroundColor: "#FFFF00",
+          backgroundColor: "#FFBF00",
           marginRight: "5px",
         }}
       ></span>
@@ -226,7 +285,7 @@ const Legend = () => (
           display: "inline-block",
           width: "20px",
           height: "20px",
-          backgroundColor: "#00FF00",
+          backgroundColor: "#7CFC00",
           marginRight: "5px",
         }}
       ></span>

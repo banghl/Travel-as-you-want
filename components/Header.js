@@ -1,8 +1,11 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
+import { IoIosNotifications } from "react-icons/io";
 
 function Header() {
+  const [showNotifications, setShowNotifications] = useState(false);
   const headerMenus = [
     {
       id: 1,
@@ -10,6 +13,11 @@ function Header() {
       icon: "/taxi.png",
     },
   ];
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   return (
     <div>
       <div className="p-5 pb-3 pl-10 border-b-[4px] border-gray-200 flex items-center justify-between">
@@ -26,7 +34,15 @@ function Header() {
             </div>
           </div>
         </div>
-        <UserButton />
+        <div className="flex items-center">
+          {/* Notification Icon and UserButton */}
+          <IoIosNotifications size="25" className="mr-10" onClick={toggleNotifications} />
+          <UserButton />
+          {showNotifications && (
+            <div className="absolute right-0 mt-4 bg-white shadow-lg rounded-lg w-60">
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

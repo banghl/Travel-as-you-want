@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { SourceContext } from '@/context/SourceContext';
-import { DestinationContext } from '@/context/DestinationContext';
 import InputItem from './InputItem';
 import TransportListOptions from './TransportListOptions';
 import NearbyPlaceOptions from './NearbyPlaceOptions';
+import { SourceContext } from '../../context/SourceContext';
+import { DestinationContext } from '../../context/DestinationContext';
 
 function SearchSection() {
   const { source } = useContext(SourceContext);
@@ -17,11 +17,18 @@ function SearchSection() {
       { lat: source.lat, lng: source.lng },
       { lat: destination.lat, lng: destination.lng }
     );
-
-    setDistance(dist * 0.00621374);
-    setSearched(true);
+  
+    const distanceInKm = dist * 0.001; // Convert distance to kilometers
+  
+    if (distanceInKm <= 20) {
+      setDistance(distanceInKm);
+      setSearched(true);
+    } else {
+      // Alert the user or handle the case where the distance exceeds 20km
+      alert('Distance between source and destination exceeds 20km. Please select a closer destination.');
+    }
   };
-
+  
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
   };

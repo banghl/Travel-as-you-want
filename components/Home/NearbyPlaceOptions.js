@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { DestinationContext } from "@/context/DestinationContext";
+import { DestinationContext } from "../../context/DestinationContext";
 
 function NearbyPlaceOptions({ source }) {
   const [nearbyPlaces, setNearbyPlaces] = useState([]);

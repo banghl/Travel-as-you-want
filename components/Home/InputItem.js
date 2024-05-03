@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { SourceContext } from "@/context/SourceContext";
-import { DestinationContext } from "@/context/DestinationContext";
 import NearbyPlaceOptions from "./NearbyPlaceOptions";
+import { SourceContext } from "../../context/SourceContext";
+import { DestinationContext } from "../../context/DestinationContext";
 
 function InputItem({ type }) {
   const [value, setValue] = useState(null);
