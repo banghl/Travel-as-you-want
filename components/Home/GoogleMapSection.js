@@ -215,29 +215,6 @@ function GoogleMapSection() {
           }}
         />
       )}
-
-      {distance && (
-        <OverlayView
-          position={calculateMidpoint(source, destination)}
-          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-        >
-          <div
-            style={{
-              background: "#4169E1", 
-              padding: "10px",
-              borderRadius: "10px",
-              fontSize: "16px",
-              fontWeight: "bold",
-              textAlign: "center",
-              minWidth: "150px",
-              color: "white",
-            }}
-          >
-            <p style={{ margin: 0 }}>Distance: {distance}</p>
-          </div>
-        </OverlayView>
-      )}
-
       <Legend />
     </GoogleMap>
   );

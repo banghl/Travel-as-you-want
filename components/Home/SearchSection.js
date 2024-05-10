@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
-import InputItem from './InputItem';
-import TransportListOptions from './TransportListOptions';
-import NearbyPlaceOptions from './NearbyPlaceOptions';
-import { SourceContext } from '../../context/SourceContext';
-import { DestinationContext } from '../../context/DestinationContext';
+import React, { useContext, useState } from "react";
+import InputItem from "./InputItem";
+import TransportListOptions from "./TransportListOptions";
+import NearbyPlaceOptions from "./NearbyPlaceOptions";
+import { SourceContext } from "../../context/SourceContext";
+import { DestinationContext } from "../../context/DestinationContext";
 
 function SearchSection() {
   const { source } = useContext(SourceContext);
@@ -17,18 +17,20 @@ function SearchSection() {
       { lat: source.lat, lng: source.lng },
       { lat: destination.lat, lng: destination.lng }
     );
-  
+
     const distanceInKm = dist * 0.001; // Convert distance to kilometers
-  
+
     if (distanceInKm <= 20) {
       setDistance(distanceInKm);
       setSearched(true);
     } else {
       // Alert the user or handle the case where the distance exceeds 20km
-      alert('Distance between source and destination exceeds 20km. Please select a closer destination.');
+      alert(
+        "Distance between source and destination exceeds 20km. Please select a closer destination."
+      );
     }
   };
-  
+
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
   };
@@ -56,8 +58,10 @@ function SearchSection() {
         <div className="mt-8">
           <div className="p-6 border-2 rounded-xl bg-blue-200">
             {currentPage === 1 && <NearbyPlaceOptions source={source} />}
-            {currentPage === 2 && distance && <TransportListOptions distance={distance} />}
-        
+            {currentPage === 2 && distance && (
+              <TransportListOptions distance={distance} />
+            )}
+
             <div className="flex justify-between mt-6">
               <button
                 className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"
