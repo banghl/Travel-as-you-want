@@ -4,6 +4,8 @@ import TransportListOptions from "./TransportListOptions";
 import NearbyPlaceOptions from "./NearbyPlaceOptions";
 import { SourceContext } from "../../context/SourceContext";
 import { DestinationContext } from "../../context/DestinationContext";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SearchSection() {
   const { source } = useContext(SourceContext);
@@ -18,16 +20,13 @@ function SearchSection() {
       { lat: destination.lat, lng: destination.lng }
     );
 
-    const distanceInKm = dist * 0.001; // Convert distance to kilometers
+    const distanceInKm = dist * 0.001;
 
-    if (distanceInKm <= 20) {
+    if (distanceInKm <= 50) {
       setDistance(distanceInKm);
       setSearched(true);
     } else {
-      // Alert the user or handle the case where the distance exceeds 20km
-      alert(
-        "Distance between source and destination exceeds 20km. Please select a closer destination."
-      );
+      toast.error('The destination extends beyond the Illawarra Region. Please select a closer destination.');
     }
   };
 
@@ -45,7 +44,6 @@ function SearchSection() {
         <p className="text-2xl font-bold text-indigo-700 mb-4">Get a Ride</p>
         <InputItem type="source" />
         <InputItem type="destination" />
-
         <button
           className="p-4 bg-indigo-600 w-full mt-5 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"
           onClick={() => calculateDistance()}
@@ -53,15 +51,13 @@ function SearchSection() {
           Search
         </button>
       </div>
-
       {searched && (
         <div className="mt-8">
           <div className="p-6 border-2 rounded-xl bg-blue-200">
             {currentPage === 1 && <NearbyPlaceOptions source={source} />}
             {currentPage === 2 && distance && (
-              <TransportListOptions distance={distance} />
+              <TransportListOptions distance={distance} destination={destination} />
             )}
-
             <div className="flex justify-between mt-6">
               <button
                 className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"

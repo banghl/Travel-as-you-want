@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import TransportListItem from "./TransportListItem";
 import { TransportListData } from "./../../utils/TransportListData";
 import { useRouter } from "next/navigation";
 
-function TransportListOptions({ distance }) {
+function TransportListOptions({ distance, destination }) {
   const [activeIndex, setActiveIndex] = useState();
   const [selectedTransport, setSelectedTransport] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -18,6 +17,7 @@ function TransportListOptions({ distance }) {
     return () => clearInterval(timer);
   }, []);
 
+  // Calculate estimated time based on distance and transport speed
   const calculateEstimatedTime = (transport) => {
     if (transport.speed) {
       const arrivalTime = new Date(
@@ -37,8 +37,46 @@ function TransportListOptions({ distance }) {
     }
   };
 
+  // Format time with leading zero if needed
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time;
+  };
+
+  // Function to store trip data in session storage
+  const storeTripData = () => {
+    let storedTrips = JSON.parse(sessionStorage.getItem("tripData"));
+
+    if (!Array.isArray(storedTrips)) {
+      storedTrips = [];
+    }
+
+    if (selectedTransport) {
+      const currentDate = new Date(); // Get the current date and time
+      const date = currentDate.toLocaleDateString(); // Extract the date in a specific format
+      const time = currentDate.toLocaleTimeString(); // Extract the time in a specific format
+
+      const tripData = {
+        destination: destination,
+        vehicleOption: {
+          name: selectedTransport.name,
+          image: selectedTransport.image,
+        },
+        totalAmount: (selectedTransport.amount * distance).toFixed(2),
+        date: date, // Store the current date
+        time: time, // Store the current time
+      };
+
+      const updatedTrips = [...storedTrips, tripData]; // Add the new trip data to the existing array
+
+      sessionStorage.setItem("tripData", JSON.stringify(updatedTrips)); // Store the updated array in session storage
+    }
+  };
+
+  const handleRequestPayment = () => {
+    storeTripData(); // Store the trip data before requesting payment
+    router.push(
+      `/payment?amount=${(selectedTransport.amount * distance).toFixed(2)}`
+    ); // Navigate to the payment page
   };
 
   return (
@@ -64,6 +102,7 @@ function TransportListOptions({ distance }) {
             distance={distance}
             estimatedTime={calculateEstimatedTime(item)}
             currentTime={currentTime}
+            destination={destination}
           />
         </div>
       ))}
@@ -73,13 +112,7 @@ function TransportListOptions({ distance }) {
           <h2>Make Payment For</h2>
           <button
             className="bg-indigo-500 text-white p-3 rounded-lg text-center hover:bg-indigo-600"
-            onClick={() =>
-              router.push(
-                `/payment?amount=${(
-                  selectedTransport.amount * distance
-                ).toFixed(2)}`
-              )
-            }
+            onClick={handleRequestPayment}
           >
             Request {selectedTransport.name}
           </button>

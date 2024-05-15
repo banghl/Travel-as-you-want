@@ -55,7 +55,7 @@ function GoogleMapSection() {
   }, [map]);
 
   useEffect(() => {
-    if (source?.length !== 0 && map) {
+    if (source && Object.keys(source).length && map) {
       map.panTo({
         lat: source.lat,
         lng: source.lng,
@@ -65,20 +65,30 @@ function GoogleMapSection() {
         lng: source.lng,
       });
     }
-    if (source.length !== 0 && destination.length !== 0) {
+    if (
+      source &&
+      Object.keys(source).length &&
+      destination &&
+      Object.keys(destination).length
+    ) {
       directionRoute();
     }
   }, [source, destination, map]);
 
   useEffect(() => {
-    if (destination?.length !== 0 && map) {
+    if (destination && Object.keys(destination).length && map) {
       setCenter({
         lat: destination.lat,
         lng: destination.lng,
       });
     }
 
-    if (source.length !== 0 && destination.length !== 0) {
+    if (
+      source &&
+      Object.keys(source).length &&
+      destination &&
+      Object.keys(destination).length
+    ) {
       directionRoute();
     }
   }, [destination, source, map]);
@@ -95,8 +105,6 @@ function GoogleMapSection() {
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
           setDirectionRoutePoints(result);
-
-          // Calculate distance
           const distance = result.routes[0].legs[0].distance.text;
           setDistance(distance);
         } else {
@@ -110,16 +118,14 @@ function GoogleMapSection() {
     function callback(map) {
       const bounds = new window.google.maps.LatLngBounds(center);
       map.fitBounds(bounds);
-
-      // Set max and min zoom levels
       const maxZoomService = new window.google.maps.MaxZoomService();
       maxZoomService.getMaxZoomAtLatLng(map.getCenter(), (response) => {
         if (response.status === window.google.maps.MaxZoomStatus.OK) {
           // Calculate zoom level for 50km distance
           const maxZoomFor50km = calculateMaxZoomForDistance(response.zoom, 50);
           map.setOptions({
-            maxZoom: maxZoomFor50km, // Limit max zoom to zoom level for 50km distance
-            minZoom: 10, // Limit min zoom to 10
+            maxZoom: maxZoomFor50km,
+            minZoom: 10,
           });
         }
       });
@@ -133,10 +139,7 @@ function GoogleMapSection() {
     setMap(null);
   }, []);
 
-  // Function to calculate zoom level for a given distance
   const calculateMaxZoomForDistance = (currentZoom, distance) => {
-    // Formula to calculate zoom level based on distance
-    // Adjust the formula as needed for your specific use case
     const zoom = Math.floor(
       currentZoom - Math.log2(distance / 156543.03392) + 8
     );

@@ -11,6 +11,9 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
     "@react-google-maps/api": "^2.19.3",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
+    "axios": "^1.6.8",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
