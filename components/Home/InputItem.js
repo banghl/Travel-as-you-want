@@ -42,7 +42,7 @@ function InputItem({ type }) {
 
   const handleSelectPlace = (place) => {
     setSelectedPlace(place);
-    getLatAndLng(place, 'destination'); // Assuming you want to update the destination
+    getLatAndLng(place, 'destination');
   };
 
   return (

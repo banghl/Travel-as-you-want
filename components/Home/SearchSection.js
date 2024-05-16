@@ -19,7 +19,7 @@ function SearchSection() {
       toast.error('Please enter a destination first.');
       return;
     }
-
+    
     const dist = google.maps.geometry.spherical.computeDistanceBetween(
       { lat: source.lat, lng: source.lng },
       { lat: destination.lat, lng: destination.lng }
