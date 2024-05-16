@@ -15,7 +15,7 @@ function NearbyPlaceOptions({ source }) {
         {
           location: { lat: source.lat, lng: source.lng },
           radius: 5000,
-          type: [selectedTripType], // Use selected trip type for search
+          type: [selectedTripType],
         },
         (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -47,10 +47,6 @@ function NearbyPlaceOptions({ source }) {
 
   const handleTripTypeChange = (event) => {
     setSelectedTripType(event.target.value);
-  };
-
-  const handleClick = (place) => {
-    handlePlaceSelect(place);
   };
 
   return (

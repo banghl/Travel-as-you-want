@@ -12,6 +12,7 @@ function InputItem({ type }) {
   const { source, setSource } = useContext(SourceContext);
   const { destination, setDestination } = useContext(DestinationContext);
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const getLatAndLng = (place, type) => {
     if (place && place.value && place.value.place_id) {
@@ -37,6 +38,11 @@ function InputItem({ type }) {
         }
       });
     }
+  };
+
+  const handleSelectPlace = (place) => {
+    setSelectedPlace(place);
+    getLatAndLng(place, 'destination'); // Assuming you want to update the destination
   };
 
   return (

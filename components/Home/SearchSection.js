@@ -9,33 +9,34 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function SearchSection() {
   const { source } = useContext(SourceContext);
-  const { destination } = useContext(DestinationContext);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { destination, setDestination } = useContext(DestinationContext);
   const [distance, setDistance] = useState();
-  const [searched, setSearched] = useState(false);
+  const [showNearbyPlaces, setShowNearbyPlaces] = useState(true);
+  const [showTransportOptions, setShowTransportOptions] = useState(false);
 
   const calculateDistance = () => {
+    if (!destination) {
+      toast.error('Please enter a destination first.');
+      return;
+    }
+
     const dist = google.maps.geometry.spherical.computeDistanceBetween(
       { lat: source.lat, lng: source.lng },
       { lat: destination.lat, lng: destination.lng }
     );
-
     const distanceInKm = dist * 0.001;
-
     if (distanceInKm <= 50) {
       setDistance(distanceInKm);
-      setSearched(true);
+      setShowNearbyPlaces(false);
+      setShowTransportOptions(true);
     } else {
       toast.error('The destination extends beyond the Illawarra Region. Please select a closer destination.');
     }
   };
 
-  const nextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    setCurrentPage(currentPage - 1);
+  const handleGoBack = () => {
+    setShowNearbyPlaces(true);
+    setShowTransportOptions(false);
   };
 
   return (
@@ -51,30 +52,16 @@ function SearchSection() {
           Search
         </button>
       </div>
-      {searched && (
-        <div className="mt-8">
-          <div className="p-6 border-2 rounded-xl bg-blue-200">
-            {currentPage === 1 && <NearbyPlaceOptions source={source} />}
-            {currentPage === 2 && distance && (
-              <TransportListOptions distance={distance} destination={destination} />
-            )}
-            <div className="flex justify-between mt-6">
-              <button
-                className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"
-                onClick={prevPage}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <button
-                className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300"
-                onClick={nextPage}
-                disabled={currentPage === 2}
-              >
-                Next
-              </button>
-            </div>
-          </div>
+      {source && showNearbyPlaces && <NearbyPlaceOptions source={source} setDestination={setDestination} />}
+      {showTransportOptions && distance && (
+        <div>
+          <TransportListOptions distance={distance} destination={destination} />
+          <button
+            className="p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-300 mt-4"
+            onClick={handleGoBack}
+          >
+            Go Back
+          </button>
         </div>
       )}
     </div>
