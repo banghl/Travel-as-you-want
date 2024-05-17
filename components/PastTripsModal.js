@@ -5,8 +5,8 @@ function PastTripsModal({ onClose }) {
   const tripData = JSON.parse(sessionStorage.getItem("tripData")) || [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-start bg-black bg-opacity-75 overflow-auto">
-      <div className="bg-white rounded-lg p-6 shadow-lg mt-10 ml-10">
+    <div className="fixed inset-0 z-50 flex items-start justify-end bg-black bg-opacity-75 overflow-auto">
+      <div className="bg-white rounded-lg p-6 shadow-lg mt-10 mr-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-indigo-600">Past Trips</h2>
           <button onClick={onClose} className="text-black-700 hover:text-black focus:outline-none">
@@ -31,6 +31,5 @@ function PastTripsModal({ onClose }) {
     </div>
   );
 }
-
 
 export default PastTripsModal;
